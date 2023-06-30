@@ -21,6 +21,9 @@
 #include "shell.h"
 
 #include "usbcfg.h"
+#include "can_interface.h"
+
+CANInterface can1(&CAND1);
 
 /*
  * Red LED blinker thread, times are in milliseconds.
@@ -51,6 +54,7 @@ static THD_FUNCTION(Thread2, arg) {
         chThdSleepMilliseconds(250);
         palSetPad(GPIOG, 1U);
         chThdSleepMilliseconds(250);
+
     }
 }
 
@@ -73,6 +77,11 @@ static const ShellConfig shell_cfg1 = {
 /* Initialization and main thread.                                           */
 /*===========================================================================*/
 
+static  CANConfig can_cfg = {
+        CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+        CAN_BTR_SJW(0) | CAN_BTR_TS2(3) |
+        CAN_BTR_TS1(8) | CAN_BTR_BRP(2)
+};
 /*
  * Application entry point.
  */
@@ -85,6 +94,19 @@ int main(void) {
      * - Kernel initialization, the main() function becomes a thread and the
      *   RTOS is active.
      */
+    static CANTxFrame txF;
+    txF.SID = 0x1FF;
+    txF.IDE = CAN_IDE_STD;
+    txF.RTR = CAN_RTR_DATA;
+    txF.DLC = 0x08;
+    txF.data8[0] = 0x17;
+    txF.data8[1] = 0xff;
+    txF.data8[2] = 0x17;
+    txF.data8[3] = 0x70;
+    txF.data8[4] = 0x17;
+    txF.data8[5] = 0x70;
+    txF.data8[6] = 0x17;
+    txF.data8[7] = 0x70;
     halInit();
     chSysInit();
 
@@ -112,21 +134,20 @@ int main(void) {
     /*
      * Creating the blinker threads.
      */
+
     chThdCreateStatic(waThread1, sizeof(waThread1),
                       NORMALPRIO + 10, Thread1, NULL);
     chThdCreateStatic(waThread2, sizeof(waThread2),
                       NORMALPRIO + 10, Thread2, NULL);
 
+    can1.start(NORMALPRIO);
+
+
     /*
      * Normal main() thread activity, spawning shells.
      */
     while (true) {
-        if (SDU1.config->usbp->state == USB_ACTIVE) {
-            thread_t *shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE,
-                                                    "shell", LOWPRIO+1 ,
-                                                    shellThread, (void *)&shell_cfg1);
-            chThdWait(shelltp);               /* Waiting termination.             */
-        }
-        chThdSleepMilliseconds(1000);
+        can1.send_msg(&txF);
+        chThdSleepMilliseconds(100);
     }
 }

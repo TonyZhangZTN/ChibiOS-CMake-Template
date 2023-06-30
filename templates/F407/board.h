@@ -770,8 +770,8 @@
                                      PIN_OSPEED_HIGH(GPIOD_LCD_WRX) |       \
                                      PIN_OSPEED_HIGH(GPIOD_FMC_D0) |        \
                                      PIN_OSPEED_HIGH(GPIOD_FMC_D1))
-#define VAL_GPIOD_PUPDR             (PIN_PUPDR_FLOATING(GPIOD_FMC_D2) |     \
-                                     PIN_PUPDR_FLOATING(GPIOD_FMC_D3) |     \
+#define VAL_GPIOD_PUPDR             (PIN_PUPDR_PULLUP(GPIOD_FMC_D2) |     \
+                                     PIN_PUPDR_PULLUP(GPIOD_FMC_D3) |     \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN2) |         \
                                      PIN_PUPDR_FLOATING(GPIOD_LCD_G7) |     \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN4) |         \
@@ -802,8 +802,8 @@
                                      PIN_ODR_HIGH(GPIOD_LCD_WRX) |          \
                                      PIN_ODR_HIGH(GPIOD_FMC_D0) |           \
                                      PIN_ODR_HIGH(GPIOD_FMC_D1))
-#define VAL_GPIOD_AFRL              (PIN_AFIO_AF(GPIOD_FMC_D2, 12U) |       \
-                                     PIN_AFIO_AF(GPIOD_FMC_D3, 12U) |       \
+#define VAL_GPIOD_AFRL              (PIN_AFIO_AF(GPIOD_FMC_D2, 9U) |       \
+                                     PIN_AFIO_AF(GPIOD_FMC_D3, 9U) |       \
                                      PIN_AFIO_AF(GPIOD_PIN2, 0U) |          \
                                      PIN_AFIO_AF(GPIOD_LCD_G7, 14U) |       \
                                      PIN_AFIO_AF(GPIOD_PIN4, 0U) |          \
@@ -1074,14 +1074,14 @@
  * PG15 - FMC_SDNCAS                (alternate 12).
  */
 #define VAL_GPIOG_MODER             (PIN_MODE_ALTERNATE(GPIOG_FMC_A10) |    \
-                                     PIN_MODE_ALTERNATE(GPIOG_FMC_A11) |    \
-                                     PIN_MODE_INPUT(GPIOG_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN3) |           \
-                                     PIN_MODE_ALTERNATE(GPIOG_FMC_BA0) |    \
-                                     PIN_MODE_ALTERNATE(GPIOG_FMC_BA1) |    \
-                                     PIN_MODE_ALTERNATE(GPIOG_LCD_R7) |     \
-                                     PIN_MODE_ALTERNATE(GPIOG_LCD_CLK) |    \
-                                     PIN_MODE_ALTERNATE(GPIOG_FMC_SDCLK) |  \
+                                     PIN_MODE_OUTPUT(GPIOG_FMC_A11) |    \
+                                     PIN_MODE_OUTPUT(GPIOG_PIN2) |           \
+                                     PIN_MODE_OUTPUT(GPIOG_PIN3) |           \
+                                     PIN_MODE_OUTPUT(GPIOG_FMC_BA0) |    \
+                                     PIN_MODE_OUTPUT(GPIOG_FMC_BA1) |    \
+                                     PIN_MODE_OUTPUT(GPIOG_LCD_R7) |     \
+                                     PIN_MODE_OUTPUT(GPIOG_LCD_CLK) |    \
+                                     PIN_MODE_OUTPUT(GPIOG_FMC_SDCLK) |  \
                                      PIN_MODE_INPUT(GPIOG_PIN9) |           \
                                      PIN_MODE_ALTERNATE(GPIOG_LCD_G3) |     \
                                      PIN_MODE_ALTERNATE(GPIOG_LCD_B3) |     \
@@ -1107,8 +1107,8 @@
                                      PIN_OTYPE_PUSHPULL(GPIOG_FMC_SDNCAS))
 #define VAL_GPIOG_OSPEEDR           (PIN_OSPEED_HIGH(GPIOG_FMC_A10) |       \
                                      PIN_OSPEED_HIGH(GPIOG_FMC_A11) |       \
-                                     PIN_OSPEED_VERYLOW(GPIOG_PIN2) |       \
-                                     PIN_OSPEED_VERYLOW(GPIOG_PIN3) |       \
+                                     PIN_OSPEED_HIGH(GPIOG_PIN2) |       \
+                                     PIN_OSPEED_HIGH(GPIOG_PIN3) |       \
                                      PIN_OSPEED_HIGH(GPIOG_FMC_BA0) |       \
                                      PIN_OSPEED_HIGH(GPIOG_FMC_BA1) |       \
                                      PIN_OSPEED_HIGH(GPIOG_LCD_R7) |        \

@@ -23,7 +23,7 @@ add_executable(ChibiOS_F407
         usbcfg.c
         board.c
         ${CHIBIOS_SRC}
-        )
+        can_interface.cpp)
 get_directory_property(TARGET_LIST BUILDSYSTEM_TARGETS)
 foreach (target ${TARGET_LIST})
     if (NOT ${target} STREQUAL "ChibiOS" AND NOT ${target} STREQUAL "CMSIS_DSP")  # OBJECT library doesn't have PRE_BUILD or POST_BUILD
