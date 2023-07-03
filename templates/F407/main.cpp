@@ -72,7 +72,7 @@ static const ShellConfig shell_cfg1 = {
         (BaseSequentialStream *)&SDU1,
         commands
 };
-
+THD_WORKING_AREA(wa, 1024);
 /*===========================================================================*/
 /* Initialization and main thread.                                           */
 /*===========================================================================*/
@@ -82,6 +82,10 @@ static  CANConfig can_cfg = {
         CAN_BTR_SJW(0) | CAN_BTR_TS2(3) |
         CAN_BTR_TS1(8) | CAN_BTR_BRP(2)
 };
+static  SerialConfig SHELL_SERIAL_CONFIG = {115200,
+                                              0,
+                                              USART_CR2_STOP1_BITS,
+                                              0};
 /*
  * Application entry point.
  */
@@ -142,12 +146,30 @@ int main(void) {
 
     can1.start(NORMALPRIO);
 
+    sdStart(&SD1,&SHELL_SERIAL_CONFIG);
+#if 1
+    chThdCreateStatic(
+            wa, sizeof(wa), NORMALPRIO + 1,
+            shellThread, (void *) &shell_cfg1);
+#else
+    while (true) {
+        if (SDU1.config->usbp->state == USB_ACTIVE) {
+            thread_t *shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE,
+                                                    "shell", NORMALPRIO + 1,
+                                                    shellThread, (void *)&shell_cfg1);
+            chThdWait(shelltp);               /* Waiting termination.             */
+        }
 
+        can1.send_msg(&txF);
+        chThdSleepMilliseconds(10);
+
+    }
+#endif
     /*
      * Normal main() thread activity, spawning shells.
      */
     while (true) {
         can1.send_msg(&txF);
-        chThdSleepMilliseconds(100);
+        chThdSleepMilliseconds(10);
     }
 }

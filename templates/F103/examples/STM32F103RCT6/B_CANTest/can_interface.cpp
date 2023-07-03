@@ -22,13 +22,6 @@ void CANInterface::ErrorFeedbackThread::main()  {
     event_listener_t el;
     chEvtRegister(&(can_driver->error_event), &el, 0);
     int iCanBusID;
-    if(can_driver == &CAND1){
-        iCanBusID = 1;
-    }else if(can_driver == &CAND2){
-        iCanBusID = 2;
-    }else{
-        iCanBusID = -1;
-    }
     while (!shouldTerminate()) {
 
         if (waitAnyEventTimeout(ALL_EVENTS, TIME_MS2I(10000)) == 0) {
@@ -65,13 +58,7 @@ bool CANInterface::register_callback(uint32_t sid_lower_bound, uint32_t sid_uppe
 
 void CANInterface::main() {
 
-    if (can_driver == &CAND1) {
-        setName("CAN1");
-    } else if (can_driver == &CAND2) {
-        setName("CAN2");
-    } else {
-        setName("CAN_Unknown");
-    }
+    setName("CAN1");
 
     CANRxFrame rxmsg;
     event_listener_t el;

@@ -24,7 +24,7 @@
 #include "shell.h"
 #include "chprintf.h"
 
-#include "usbcfg.h"
+#include "can_interface.h"
 
 /*===========================================================================*/
 /* Command line related.                                                     */
@@ -67,90 +67,34 @@ static const ShellConfig shell_cfg1 = {
         commands
 };
 
-/*===========================================================================*/
-/* Generic code.                                                             */
-/*===========================================================================*/
 
-/*
- * Blinker thread, times are in milliseconds.
- */
-static THD_WORKING_AREA(waThread1, 128);
-static __attribute__((noreturn)) THD_FUNCTION(Thread1, arg) {
-    (void)arg;
-    chRegSetThreadName("blinker");
-    while (true) {
-        systime_t time = serusbcfg.usbp->state == USB_ACTIVE ? 250 : 500;
-        palClearPad(GPIOB, GPIOB_LED);
-        chThdSleepMilliseconds(time);
-        palSetPad(GPIOB, GPIOB_LED);
-        chThdSleepMilliseconds(time);
-    }
-}
-
-/*
- * Application entry point.
- */
 static  SerialConfig SHELL_SERIAL_CONFIG = {115200,
                                                      0,
                                                      USART_CR2_STOP1_BITS,
                                                      0};
-static PWMConfig pwm_config = {
-        10000,
-        200, // Default playing_note: 100Hz
-        nullptr,
-        {
-                {PWM_OUTPUT_ACTIVE_HIGH, nullptr},  // it's all CH1 for current support boards
-                {PWM_OUTPUT_DISABLED, nullptr},
-                {PWM_OUTPUT_DISABLED, nullptr},
-                {PWM_OUTPUT_DISABLED, nullptr}
-        },
-        0,
-        0
-};
+CANInterface can1(&CAND1);
 int main(void) {
 
-    /*
-     * System initializations.
-     * - HAL initialization, this also initializes the configured device drivers
-     *   and performs the board-specific initializations.
-     * - Kernel initialization, the main() function becomes a thread and the
-     *   RTOS is active.
-     */
     halInit();
     chSysInit();
-
-    /*
-     * Initializes a serial-over-USB CDC driver.
-     */
-    sduObjectInit(&SDU1);
-    sduStart(&SDU1, &serusbcfg);
-    /*
-     * Activates the USB driver and then the USB bus pull-up on D+.
-     * Note, a delay is inserted in order to not have to disconnect the cable
-     * after a reset.
-     */
-    usbDisconnectBus(serusbcfg.usbp);
-    chThdSleepMilliseconds(1500);
-    usbStart(serusbcfg.usbp, &usbcfg);
-    usbConnectBus(serusbcfg.usbp);
+    static CANTxFrame txF;
+    txF.SID = 0x1FF;
+    txF.IDE = CAN_IDE_STD;
+    txF.RTR = CAN_RTR_DATA;
+    txF.DLC = 0x08;
+    txF.data8[0] = 0x17;
+    txF.data8[1] = 0xff;
+    txF.data8[2] = 0x17;
+    txF.data8[3] = 0x70;
+    txF.data8[4] = 0x17;
+    txF.data8[5] = 0x70;
+    txF.data8[6] = 0x17;
+    txF.data8[7] = 0x70;
     sdStart(&SD1,&SHELL_SERIAL_CONFIG);
-
-    pwmStart(&PWMD3, &pwm_config);
-    pwmEnableChannel(&PWMD3, 0, PWM_PERCENTAGE_TO_WIDTH(&PWMD3, 750));
-    /*
-     * Shell manager initialization.
-     */
+    can1.start(NORMALPRIO);
     shellInit();
 
-    /*
-     * Creates the blinker thread.
-     */
-    chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
-
-    /*
-     * Normal main() thread activity, spawning shells.
-     */
-#if 0
+#if 1
     chThdCreateStatic(
             wa, sizeof(wa), LOWPRIO + 1,
             shellThread, (void *) &shell_cfg1);
@@ -167,5 +111,9 @@ int main(void) {
 
     }
 #endif
+    while(1){
+        can1.send_msg(&txF);
+        chThdSleepMilliseconds(10);
+    }
     chThdSetPriority(IDLEPRIO);
 }

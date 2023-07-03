@@ -454,16 +454,22 @@ Reset_Handler:
 
         .thumb_func
 NMI_Handler:
+        b .
         .thumb_func
 HardFault_Handler:
+b .
         .thumb_func
 MemManage_Handler:
+b .
         .thumb_func
 BusFault_Handler:
+b .
         .thumb_func
 UsageFault_Handler:
+b .
         .thumb_func
 SecureFault_Handler:
+b .
         .thumb_func
 Vector20:
         .thumb_func
