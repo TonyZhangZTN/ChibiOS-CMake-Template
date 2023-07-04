@@ -18,12 +18,15 @@ include(ChibiOS.cmake)
 
 
 include_directories(.)
-add_executable(ChibiOS_F407
-        main.cpp
-        usbcfg.c
-        board.c
-        ${CHIBIOS_SRC}
-        can_interface.cpp)
+add_executable(STM32F429IGT6_A_CANTest
+        examples/STM32F429IGT6/A_CANTest/main.cpp
+        examples/STM32F429IGT6/A_CANTest/usbcfg.c
+        examples/STM32F429IGT6/A_CANTest/board.c
+        examples/STM32F429IGT6/A_CANTest/can_interface.cpp
+        ${CHIBIOS_SRC})
+target_include_directories(STM32F429IGT6_A_CANTest PUBLIC examples/STM32F429IGT6/A_CANTest)
+
+
 get_directory_property(TARGET_LIST BUILDSYSTEM_TARGETS)
 foreach (target ${TARGET_LIST})
     if (NOT ${target} STREQUAL "ChibiOS" AND NOT ${target} STREQUAL "CMSIS_DSP")  # OBJECT library doesn't have PRE_BUILD or POST_BUILD
