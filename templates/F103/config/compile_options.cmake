@@ -32,7 +32,7 @@ set(C_WARN_FLAGS "-Wall -Wextra -Wundef -Wstrict-prototypes")
 set(CPP_WARN_FLAGS "-Wall -Wextra -Wundef")
 
 # Defintions for C and CPP sources
-set(DEFS "-DCORTEX_USE_FPU=FALSE ")
+set(DEFS "-DCORTEX_USE_FPU=FALSE -DSHELL_CONFIG_FILE=TRUE")
 
 # Defintions for ASM sources
 set(ASM_DEFS "-DCORTEX_USE_FPU=FALSE")
@@ -50,7 +50,7 @@ set(THUMB_FLAGS "-mthumb -DTHUMB -DTHUMB_PRESENT -mno-thumb-interwork -DTHUMB_NO
 
 # Startup LD directory and LD file
 
-set(STARTUP_LD_DICT ${PROJECT_SOURCE_DIR}/../../os/common/startup/ARMCMx/compilers/GCC/ld)
+set(STARTUP_LD_DICT ${PROJECT_SOURCE_DIR}/../../ChibiOS/os/common/startup/ARMCMx/compilers/GCC/ld)
 set(STARTUP_LD_FILE ${STARTUP_LD_DICT}/STM32F103x8.ld)
 
 # SET FLAGS TO CMAKE
