@@ -44,6 +44,20 @@ static THD_FUNCTION(Thread1, arg) {
 /*
  * Green LED blinker thread, times are in milliseconds.
  */
+#define SHELL_WA_SIZE   THD_WORKING_AREA_SIZE(2048)
+static const ShellCommand commands[] = {
+        {NULL, NULL}
+};
+char completion[40][128] = {{0}};
+char histBuffer[64];
+static const ShellConfig shell_cfg1 = {
+        (BaseSequentialStream *)&SDU1,
+        commands,
+        histBuffer,
+        64,
+        (char **)completion
+};
+THD_WORKING_AREA(wa, 2048);
 static THD_WORKING_AREA(waThread2, 128);
 static THD_FUNCTION(Thread2, arg) {
 
@@ -54,7 +68,6 @@ static THD_FUNCTION(Thread2, arg) {
         chThdSleepMilliseconds(250);
         palSetPad(GPIOG, 1U);
         chThdSleepMilliseconds(250);
-
     }
 }
 
@@ -62,17 +75,8 @@ static THD_FUNCTION(Thread2, arg) {
 /* Command line related.                                                     */
 /*===========================================================================*/
 
-#define SHELL_WA_SIZE   THD_WORKING_AREA_SIZE(2048)
 
-static const ShellCommand commands[] = {
-        {NULL, NULL}
-};
 
-static const ShellConfig shell_cfg1 = {
-        (BaseSequentialStream *)&SDU1,
-        commands
-};
-THD_WORKING_AREA(wa, 1024);
 /*===========================================================================*/
 /* Initialization and main thread.                                           */
 /*===========================================================================*/
@@ -89,6 +93,7 @@ static  SerialConfig SHELL_SERIAL_CONFIG = {115200,
 /*
  * Application entry point.
  */
+static mutex_t printfMutex;
 int main(void) {
 
     /*

@@ -32,7 +32,7 @@ set(C_WARN_FLAGS "-Wall -Wextra -Wundef -Wstrict-prototypes")
 set(CPP_WARN_FLAGS "-Wall -Wextra -Wundef")
 
 # Defintions for C and CPP sources
-set(DEFS "-DCORTEX_USE_FPU=TRUE ")
+set(DEFS "-DCORTEX_USE_FPU=TRUE -DSHELL_CONFIG_FILE=TRUE")
 
 # Defintions for ASM sources
 set(ASM_DEFS "-DCORTEX_USE_FPU=TRUE")

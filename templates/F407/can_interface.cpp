@@ -13,6 +13,7 @@
 
 #include "can_interface.h"
 #include "chprintf.h"
+#include "usbcfg.h"
 
 #if (CAN_INTERFACE_ENABLE_ERROR_FEEDBACK_THREAD == TRUE)
 
@@ -37,7 +38,7 @@ void CANInterface::ErrorFeedbackThread::main()  {
         }
 
         eventflags_t flags = chEvtGetAndClearFlags(&el);
-        chprintf((BaseSequentialStream*)&SD1,"CAN%d Error %u", iCanBusID,flags);
+        chprintf((BaseSequentialStream*)&SDU1,"CAN%d Error %u", iCanBusID,flags);
         last_error_time = TIME_I2MS(chVTGetSystemTimeX());
     }
 
@@ -86,8 +87,8 @@ void CANInterface::main() {
 
         // Process every received message
         while (canReceive(can_driver, CAN_ANY_MAILBOX, &rxmsg, TIME_IMMEDIATE) == MSG_OK) {
-            /// Don't use chprintf here
-            //chprintf((BaseSequentialStream*)&USBD1,"CAN recv");
+                /// Don't use chprintf here
+            chprintf((BaseSequentialStream*)&SD1,"CAN recv");
             for (unsigned i = 0; i < callback_list_count; i++) {
                 if (rxmsg.SID >= callback_list[i].sid_lower_bound && rxmsg.SID <= callback_list[i].sid_upper_bound) {
                     callback_list[i].callback_func(&rxmsg);
@@ -98,7 +99,6 @@ void CANInterface::main() {
 
     chEvtUnregister(&(can_driver->rxfull_event), &el);
 }
-
 bool CANInterface::send_msg(const CANTxFrame *txmsg) {
     if (canTransmit(can_driver, CAN_ANY_MAILBOX, txmsg, TIME_MS2I(TRANSMIT_TIMEOUT_MS)) != MSG_OK) {
         // TODO: show debug info for failure
