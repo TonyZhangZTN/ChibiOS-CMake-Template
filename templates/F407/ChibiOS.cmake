@@ -1,4 +1,4 @@
-set(CHIBIOS ${CMAKE_SOURCE_DIR}/../..)
+set(CHIBIOS ${CMAKE_SOURCE_DIR}/../../ChibiOS)
 # Licensing files.
 include_directories(${CHIBIOS}/os/license)
 # Startup files.

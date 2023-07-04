@@ -50,8 +50,8 @@ set(THUMB_FLAGS "-mthumb -DTHUMB -DTHUMB_PRESENT -mno-thumb-interwork -DTHUMB_NO
 
 # Startup LD directory and LD file
 
-set(STARTUP_LD_DICT ${PROJECT_SOURCE_DIR}/../../os/common/startup/ARMCMx/compilers/GCC/ld)
-set(STARTUP_LD_FILE ${STARTUP_LD_DICT}/STM32F407xG.ld)
+set(STARTUP_LD_DICT ${PROJECT_SOURCE_DIR}/../../ChibiOS/os/common/startup/ARMCMx/compilers/GCC/ld)
+set(STARTUP_LD_FILE ${STARTUP_LD_DICT}/STM32F429xI.ld)
 
 # SET FLAGS TO CMAKE
 
