@@ -1,4 +1,5 @@
 set(CHIBIOS ${CMAKE_SOURCE_DIR}/../../ChibiOS)
+set(CHIBIOS-Contrib ${CMAKE_SOURCE_DIR}/../../ChibiOS-Contrib)
 # Licensing files.
 include_directories(${CHIBIOS}/os/license)
 # Startup files.
@@ -275,3 +276,23 @@ set(
         ${CHIBIOS}/os/various/syscalls.c
         ${CHIBIOS}/os/various/cpp_wrappers/ch.cpp
 )
+
+#below is ChibiOS-Contrib related
+#include_directories(
+#        ${CHIBIOS-Contrib}/os/various/cpp_wrappers
+#)
+#set(
+#        CHIBIOS_SRC
+#        ${CHIBIOS_SRC}
+#        ${CHIBIOS}/os/various/syscalls.c
+#        ${CHIBIOS}/os/various/cpp_wrappers/ch.cpp
+#)
+#include_directories(
+#        ${CHIBIOS}/os/various/cpp_wrappers
+#)
+#set(
+#        CHIBIOS_SRC
+#        ${CHIBIOS_SRC}
+#        ${CHIBIOS}/os/various/syscalls.c
+#        ${CHIBIOS}/os/various/cpp_wrappers/ch.cpp
+#)
