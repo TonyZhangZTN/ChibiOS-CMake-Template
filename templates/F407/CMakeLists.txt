@@ -32,7 +32,13 @@ add_executable(STM32F429IGT6_B_FMCTest
         examples/STM32F429IGT6/B_FMCTest/fmc.c
         ${CHIBIOS_SRC} examples/STM32F429IGT6/B_FMCTest/lcd9341.c)
 target_include_directories(STM32F429IGT6_B_FMCTest PUBLIC examples/STM32F429IGT6/B_FMCTest)
-
+add_executable(STM32F429IGT6_C_DMAUARTTest
+        examples/STM32F429IGT6/C_DMAUARTTest/main.cpp
+        examples/STM32F429IGT6/C_DMAUARTTest/usbcfg.c
+        examples/STM32F429IGT6/C_DMAUARTTest/board.c
+        ${CHIBIOS_SRC}
+        )
+target_include_directories(STM32F429IGT6_C_DMAUARTTest PUBLIC examples/STM32F429IGT6/C_DMAUARTTest)
 get_directory_property(TARGET_LIST BUILDSYSTEM_TARGETS)
 foreach (target ${TARGET_LIST})
     if (NOT ${target} STREQUAL "ChibiOS" AND NOT ${target} STREQUAL "CMSIS_DSP")  # OBJECT library doesn't have PRE_BUILD or POST_BUILD
