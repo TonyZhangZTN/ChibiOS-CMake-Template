@@ -22,7 +22,8 @@
 
 #include "usbcfg.h"
 #include "ch.hpp"
-
+#include "fmc.h"
+#include "lcd9341.h"
 static const ShellCommand commands[] = {
         {NULL, NULL}
 };
@@ -73,7 +74,8 @@ int main(void) {
     chThdCreateStatic(
             wa, sizeof(wa), NORMALPRIO + 1,
             shellThread, (void *) &shell_cfg1);
-
+    fmcInit();
+    lcdInit();
     /*
      * Normal main() thread activity, spawning shells.
      */

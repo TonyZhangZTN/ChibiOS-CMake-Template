@@ -29,7 +29,8 @@ add_executable(STM32F429IGT6_B_FMCTest
         examples/STM32F429IGT6/B_FMCTest/main.cpp
         examples/STM32F429IGT6/B_FMCTest/usbcfg.c
         examples/STM32F429IGT6/B_FMCTest/board.c
-        ${CHIBIOS_SRC})
+        examples/STM32F429IGT6/B_FMCTest/fmc.c
+        ${CHIBIOS_SRC} examples/STM32F429IGT6/B_FMCTest/lcd9341.c)
 target_include_directories(STM32F429IGT6_B_FMCTest PUBLIC examples/STM32F429IGT6/B_FMCTest)
 
 get_directory_property(TARGET_LIST BUILDSYSTEM_TARGETS)
