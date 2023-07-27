@@ -17,7 +17,7 @@ endif()
 set(OPT_FLAGS "${OPT_FLAGS}")
 
 # Linker optimization flags
-set(LD_OPT_FLAGS ",--gc-sections,--defsym=__process_stack_size__=0x400,--defsym=__main_stack_size__=0x400")
+set(LD_OPT_FLAGS ",--gc-sections,--defsym=__process_stack_size__=0x600,--defsym=__main_stack_size__=0x600")
 
 # Flags for C sources only
 set(C_OPT_FLAGS "")

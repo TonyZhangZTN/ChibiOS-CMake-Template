@@ -119,9 +119,10 @@ private:
 
 
     CANConfig can_cfg = {
-            CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+            // add NO AUTO RESENT to prevent loop sending
+            CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP|CAN_MCR_NART,
             CAN_BTR_SJW(0) | CAN_BTR_TS2(3) |
-            CAN_BTR_TS1(8) | CAN_BTR_BRP(2)
+            CAN_BTR_TS1(6) | CAN_BTR_BRP(2)
     };
     static constexpr unsigned TRANSMIT_TIMEOUT_MS = 1;
 
