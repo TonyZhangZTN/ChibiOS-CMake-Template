@@ -5,4 +5,4 @@
 [submodule "ChibiOS"]
 	path = ChibiOS
 	url = https://gitee.com/TonyZhangZTN/ChibiOS-Backup.git
-	branch = stable_21.11.x
+	branch = master
