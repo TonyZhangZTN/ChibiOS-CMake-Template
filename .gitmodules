@@ -1,7 +1,7 @@
 [submodule "ChibiOS-Contrib"]
 	path = ChibiOS-Contrib
 	url = https://gitee.com/TonyZhangZTN/ChibiOS-Contrib-Backup.git
-	branch = chibios-21.11.x
+	branch = gitee-update-mirror
 [submodule "ChibiOS"]
 	path = ChibiOS
 	url = https://gitee.com/TonyZhangZTN/ChibiOS-Backup.git
