@@ -14,39 +14,83 @@
     limitations under the License.
 */
 
+#include "ch.h"
 #include "hal.h"
 
+#include "chprintf.h"
+#include "shell.h"
+
+
+
 /*
- * LEDs blinker thread, times are in milliseconds.
+ * Red LED blinker thread, times are in milliseconds.
  */
 static THD_WORKING_AREA(waThread1, 128);
 static THD_FUNCTION(Thread1, arg) {
 
     (void)arg;
-    chRegSetThreadName("blinker");
+    chRegSetThreadName("blinker1");
     while (true) {
-        palSetLine(LINE_LED_RED);
-        chThdSleepMilliseconds(50);
-        palSetLine(LINE_LED_GREEN);
-        chThdSleepMilliseconds(50);
-        palSetLine(LINE_LED_BLUE);
-        chThdSleepMilliseconds(50);
-        palSetLine(LINE_LED_ORANGE);
-        chThdSleepMilliseconds(200);
-        palClearLine(LINE_LED_RED);
-        chThdSleepMilliseconds(50);
-        palClearLine(LINE_LED_GREEN);
-        chThdSleepMilliseconds(50);
-        palClearLine(LINE_LED_BLUE);
-        chThdSleepMilliseconds(50);
-        palClearLine(LINE_LED_ORANGE);
-        chThdSleepMilliseconds(200);
+        palClearPad(GPIOA, 2U);
+        chThdSleepMilliseconds(500);
+        palSetPad(GPIOA, 2U);
+        chThdSleepMilliseconds(500);
     }
 }
 
 /*
+ * Green LED blinker thread, times are in milliseconds.
+ */
+#define SHELL_WA_SIZE   THD_WORKING_AREA_SIZE(2048)
+static const ShellCommand commands[] = {
+        {NULL, NULL}
+};
+char completion[40][128] = {{0}};
+char histBuffer[64];
+static const ShellConfig shell_cfg1 = {
+        (BaseSequentialStream *)&SD3,
+        commands,
+        histBuffer,
+        64,
+        (char **)completion
+};
+THD_WORKING_AREA(wa, 512);
+static THD_WORKING_AREA(waThread2, 128);
+static THD_FUNCTION(Thread2, arg) {
+
+    (void)arg;
+    chRegSetThreadName("blinker2");
+    while (true) {
+        palClearPad(GPIOA, 1U);
+        chThdSleepMilliseconds(250);
+        palSetPad(GPIOA, 1U);
+        chThdSleepMilliseconds(250);
+    }
+}
+
+/*===========================================================================*/
+/* Command line related.                                                     */
+/*===========================================================================*/
+
+
+
+/*===========================================================================*/
+/* Initialization and main thread.                                           */
+/*===========================================================================*/
+
+static  CANConfig can_cfg = {
+        CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+        CAN_BTR_SJW(0) | CAN_BTR_TS2(3) |
+        CAN_BTR_TS1(8) | CAN_BTR_BRP(2)
+};
+static  SerialConfig SHELL_SERIAL_CONFIG = {115200,
+                                              0,
+                                              USART_CR2_STOP1_BITS,
+                                              0};
+/*
  * Application entry point.
  */
+static mutex_t printfMutex;
 int main(void) {
 
     /*
@@ -56,32 +100,51 @@ int main(void) {
      * - Kernel initialization, the main() function becomes a thread and the
      *   RTOS is active.
      */
+
     halInit();
+    chSysInit();
 
     /*
-     * Turning off buck switch. Note that this means to completely turn of the
-     * High Brightness LED which is driven by the buck converter.
+     * Shell manager initialization.
      */
-    palSetLineMode(LINE_BK_DRIVE, PAL_MODE_OUTPUT_PUSHPULL);
-    palClearLine(LINE_BK_DRIVE);
 
+
+
+    shellInit();
     /*
-     * Activates the serial driver 2 using the driver default configuration.
+     * Creating the blinker threads.
      */
-    sdStart(&SD2, NULL);
 
-    /*
-     * Creates the blinker thread.
-     */
-    //chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
+    chThdCreateStatic(waThread1, sizeof(waThread1),
+                      NORMALPRIO + 10, Thread1, NULL);
+    chThdCreateStatic(waThread2, sizeof(waThread2),
+                      NORMALPRIO + 10, Thread2, NULL);
 
+
+    sdStart(&SD3,&SHELL_SERIAL_CONFIG);
+    chprintf((BaseSequentialStream*)&SD3,"Hello\r\n");
+#if 1
+    chThdCreateStatic(
+            wa, sizeof(wa), NORMALPRIO + 1,
+            shellThread, (void *) &shell_cfg1);
+#else
+    while (true) {
+        if (SDU1.config->usbp->state == USB_ACTIVE) {
+            thread_t *shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE,
+                                                    "shell", NORMALPRIO + 1,
+                                                    shellThread, (void *)&shell_cfg1);
+            chThdWait(shelltp);               /* Waiting termination.             */
+        }
+
+        can1.send_msg(&txF);
+        chThdSleepMilliseconds(10);
+
+    }
+#endif
     /*
-     * Normal main() thread activity, in this demo it does nothing except
-     * sleeping in a loop and check the button state.
+     * Normal main() thread activity, spawning shells.
      */
     while (true) {
-        if (palReadPad(GPIOA, GPIOA_BUTTON)) {
-        }
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(10);
     }
 }

@@ -406,8 +406,8 @@
                                      PIN_MODE_OUTPUT(GPIOB_LED_BLUE) |      \
                                      PIN_MODE_OUTPUT(GPIOB_LED_ORANGE) |    \
                                      PIN_MODE_OUTPUT(GPIOB_LED_GREEN) |     \
-                                     PIN_MODE_INPUT(GPIOB_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN11) |          \
+                                     PIN_MODE_ALTERNATE(GPIOB_PIN10) |          \
+                                     PIN_MODE_ALTERNATE(GPIOB_PIN11) |          \
                                      PIN_MODE_ALTERNATE(GPIOB_BK_DRIVE) |   \
                                      PIN_MODE_INPUT(GPIOB_PIN13) |          \
                                      PIN_MODE_INPUT(GPIOB_RC) |             \
@@ -486,8 +486,8 @@
                                      PIN_AFIO_AF(GPIOB_LED_BLUE, 0U))
 #define VAL_GPIOB_AFRH              (PIN_AFIO_AF(GPIOB_LED_ORANGE, 0U) |    \
                                      PIN_AFIO_AF(GPIOB_LED_GREEN, 0U) |     \
-                                     PIN_AFIO_AF(GPIOB_PIN10, 0U) |         \
-                                     PIN_AFIO_AF(GPIOB_PIN11, 0U) |         \
+                                     PIN_AFIO_AF(GPIOB_PIN10, 7U) |         \
+                                     PIN_AFIO_AF(GPIOB_PIN11, 7U) |         \
                                      PIN_AFIO_AF(GPIOB_BK_DRIVE, 13U) |     \
                                      PIN_AFIO_AF(GPIOB_PIN13, 0U) |         \
                                      PIN_AFIO_AF(GPIOB_RC, 0U) |            \
