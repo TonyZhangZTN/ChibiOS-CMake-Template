@@ -19,9 +19,9 @@ include(ChibiOS.cmake)
 
 add_executable(STM32F334C8T6_A_CANTest
         examples/STM32F334C8T6/A_CANTest/main.cpp
-        examples/STM32F334C8T6/A_CANTest/usbcfg.c
+        #examples/STM32F334C8T6/A_CANTest/usbcfg.c
         examples/STM32F334C8T6/A_CANTest/board.c
-        examples/STM32F334C8T6/A_CANTest/can_interface.cpp
+        #examples/STM32F334C8T6/A_CANTest/can_interface.cpp
         ${CHIBIOS_SRC})
 target_include_directories(STM32F334C8T6_A_CANTest PUBLIC examples/STM32F334C8T6/A_CANTest)
 

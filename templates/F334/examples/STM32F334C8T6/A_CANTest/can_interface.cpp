@@ -13,7 +13,7 @@
 
 #include "can_interface.h"
 #include "chprintf.h"
-#include "usbcfg.h"
+//#include "usbcfg.h"
 
 #if (CAN_INTERFACE_ENABLE_ERROR_FEEDBACK_THREAD == TRUE)
 
@@ -25,8 +25,6 @@ void CANInterface::ErrorFeedbackThread::main()  {
     int iCanBusID;
     if(can_driver == &CAND1){
         iCanBusID = 1;
-    }else if(can_driver == &CAND2){
-        iCanBusID = 2;
     }else{
         iCanBusID = -1;
     }
@@ -38,7 +36,7 @@ void CANInterface::ErrorFeedbackThread::main()  {
         }
 
         eventflags_t flags = chEvtGetAndClearFlags(&el);
-        chprintf((BaseSequentialStream*)&SDU1,"CAN%d Error %u", iCanBusID,flags);
+        chprintf((BaseSequentialStream*)&SD1,"CAN%d Error %u", iCanBusID,flags);
         last_error_time = TIME_I2MS(chVTGetSystemTimeX());
     }
 
@@ -68,8 +66,6 @@ void CANInterface::main() {
 
     if (can_driver == &CAND1) {
         setName("CAN1");
-    } else if (can_driver == &CAND2) {
-        setName("CAN2");
     } else {
         setName("CAN_Unknown");
     }

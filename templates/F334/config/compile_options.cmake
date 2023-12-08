@@ -14,10 +14,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(DEBUG_FLAGS "-g")
 endif()
 # NO FPU
-set(OPT_FLAGS "${OPT_FLAGS}")
+set(OPT_FLAGS "${OPT_FLAGS} -mfpu=fpv4-sp-d16")
 
 # Linker optimization flags
-set(LD_OPT_FLAGS ",--gc-sections,--defsym=__process_stack_size__=0x8000,--defsym=__main_stack_size__=0x8000")
+set(LD_OPT_FLAGS ",--gc-sections,--defsym=__process_stack_size__=0x400,--defsym=__main_stack_size__=0x400")
 
 # Flags for C sources only
 set(C_OPT_FLAGS "")
