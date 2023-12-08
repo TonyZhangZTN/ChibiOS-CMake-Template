@@ -279,6 +279,40 @@ set(
         ${CHIBIOS}/os/common/ports/ARMv7-M/compilers/GCC/chcoreasm.S
 )
 
+#include ${CHIBIOS}/os/hal/lib/streams/streams.mk
+include_directories(
+        ${CHIBIOS}/os/hal/lib/streams
+)
+set(
+        CHIBIOS_SRC
+        ${CHIBIOS_SRC}
+        ${CHIBIOS}/os/hal/lib/streams/chprintf.c
+        ${CHIBIOS}/os/hal/lib/streams/chscanf.c
+        ${CHIBIOS}/os/hal/lib/streams/memstreams.c
+        ${CHIBIOS}/os/hal/lib/streams/nullstreams.c
+        ${CHIBIOS}/os/hal/lib/streams/bufstreams.c
+)
+
+#include ${CHIBIOS}/os/various/shell/shell.mk
+include_directories(
+        ${CHIBIOS}/os/various/shell
+)
+set(
+        CHIBIOS_SRC
+        ${CHIBIOS_SRC}
+        ${CHIBIOS}/os/various/shell/shell.c
+        ${CHIBIOS}/os/various/shell/shell_cmd.c
+)
+#cpp wrapper
+include_directories(
+        ${CHIBIOS}/os/various/cpp_wrappers
+)
+set(
+        CHIBIOS_SRC
+        ${CHIBIOS_SRC}
+        ${CHIBIOS}/os/various/syscalls.c
+        ${CHIBIOS}/os/various/cpp_wrappers/ch.cpp
+)
 #below is ChibiOS-Contrib related
 #include_directories(
 #        ${CHIBIOS-Contrib}/os/various/cpp_wrappers
